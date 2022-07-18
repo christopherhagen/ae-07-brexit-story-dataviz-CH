@@ -1,6 +1,6 @@
 Brexit
 ================
-Naomi Ekas
+Christopher Hagen
 
 In September 2019, YouGov survey asked 1,639 GB adults the following
 question:
@@ -48,7 +48,7 @@ ggplot(brexit, aes(y = opinion, fill = opinion)) +
     ## Warning: `guides(<scale> = FALSE)` is deprecated. Please use `guides(<scale> =
     ## "none")` instead.
 
-![](brexit_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](brexit_files/figure-gfm/0-1.png)<!-- -->
 
 In this application exercise we tell different stories with the same
 data.
@@ -84,7 +84,7 @@ ggplot(brexit, aes(y = opinion, fill = opinion)) +
     ## Warning: `guides(<scale> = FALSE)` is deprecated. Please use `guides(<scale> =
     ## "none")` instead.
 
-![](brexit_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](brexit_files/figure-gfm/1-1.png)<!-- -->
 
 ### Exercise 2 - Comparing proportions across facets
 
@@ -96,8 +96,28 @@ visualisation telling different than the story the original plot tells?
 which means you’ll need to load it on top of the document as well.
 
 ``` r
-# code goes here
+brexit %>% 
+  count(region, opinion) %>% 
+  group_by(region) %>% 
+  mutate(opinion_proportion = n / sum(n)) %>% 
+ggplot(aes(y = opinion, x = opinion_proportion, fill = opinion)) +
+  geom_col() +
+  facet_wrap(~region, nrow = 1) +
+  scale_fill_manual(values = c(
+    "Wrong" = "#ef8a62",
+    "Right" = "#67a9cf",
+    "Don't know" = "gray"
+  )) +
+  scale_x_continuous(labels = percent) +
+  labs ( x = "Proportion", y = NULL) +
+  guides(fill = FALSE) +
+  theme_minimal()
 ```
+
+    ## Warning: `guides(<scale> = FALSE)` is deprecated. Please use `guides(<scale> =
+    ## "none")` instead.
+
+![](brexit_files/figure-gfm/2-1.png)<!-- -->
 
 ### Exercise 3 - Comparing proportions across bars
 
@@ -106,6 +126,4 @@ dodging the bars for opinion proportions for each region, rather than
 faceting by region and then improve the legend. How is the story this
 visualization telling different than the story the previous plot tells?
 
-``` r
-# code goes here
-```
+`{ r3} brexit %>%    count(region, opinion) %>%    group_by(region) %>%    mutate(opinion_proportion = n / sum(n)) %>%  ggplot(aes(y = fct_rev(region), x = opinion_proportion, fill = opinion)) +   geom_col(position = "dodge") +   #facet_wrap(~region, nrow = 1) +   scale_fill_manual(values = c(     "Wrong" = "#ef8a62",     "Right" = "#67a9cf",     "Don't know" = "gray"   )) +   scale_x_continuous(labels = percent) +   labs ( x = "Proportion", y = NULL, fill = "Opinion") +   #guides(fill = FALSE) +   theme_minimal()`
